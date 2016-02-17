@@ -1,34 +1,46 @@
-
-
-var app = angular.module('todoApp', [], function($interpolateProvider) {
-	$interpolateProvider.startSymbol('<%');
-	$interpolateProvider.endSymbol('%>');
+var mainApp = angular.module("mainApp", ['ngRoute']);
+ 
+mainApp.config(function($routeProvider) {
+    $routeProvider
+        .when('/home', {
+            templateUrl: 'testNgRoute/home.html'
+        })
+        .when('/viewStudents', {
+            templateUrl: 'testNgRoute/viewStudents.html'
+        })
+        .otherwise({
+            redirectTo: '/home'
+        });
+});
+ 
+mainApp.controller('StudentController', function($scope) {
+    $scope.students = [
+        {name: 'Mark Waugh', city:'New York'},
+        {name: 'Steve Jonathan', city:'London'},
+        {name: 'John Marcus', city:'Paris'}
+    ];
+ 
+    $scope.message = "Click on the hyper link to view the students list.";
 });
 
-app.controller('todoController', function($scope, $http) {
 
-	$scope.usertasks = [];
-	$scope.users = [];
-	$scope.tasks = [];
 
-	$scope.tmpTasks = [];
-	$scope.tmpUsertask = [];
+mainApp.controller('todoController', function($scope, $location , $http ) {
+
+	
 
 	$scope.loading = false;
 	$scope.titleTab = true;
-	$scope.userTaskTab = false;
 
 	//loading before usertask
 	$scope.loading2 = false;
 
-	//sugn button
-	$scope.loading2 = false;
 	
 
 	$scope.front = function(index){
 		$scope.titleTab = false;
 		$scope.loading2 = true;
-		$scope.userTaskTab = false;
+		
 
 		var list = $scope.usertasks[index];
 		$scope.tmpTasks = $scope.tasks[index];
@@ -36,17 +48,17 @@ app.controller('todoController', function($scope, $http) {
 
 		$http.get('todoapp/'+ list.id).success(function(data, status, headers, config) {
 			$scope.listsuser = data;
-			$scope.loading2 = false;
 			$scope.userTaskTab = true;
-
+			$scope.loading2 = false;
+			$location.path( "/viewStudents" );
 		});
+
 	}
 
 
 
 	$scope.back = function(){
 		$scope.titleTab = true;
-		$scope.userTaskTab = false;
 		
 	}
 

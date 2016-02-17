@@ -1,0 +1,30 @@
+<div class="container" ng-controller="todoController">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                
+                <div class="panel-heading"><h2>Tasks List</h2></div>
+		<h3>{{ tmpTasks.title }}</h3>
+                <div class="panel-body">
+                	<center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
+                	<ul class="list-group" >
+				<div ng-repeat='task in tasks'>
+                                    		<a  class="list-group-item" ng-click="front($index)"><div><strong>{{ task.title }} </strong></div> 
+                                       	 	<div> Publish On : {{ task.published_at }}</div></a>
+                                       	 </div>
+                                	</ul>
+
+                
+                
+                </div>
+
+            </div>
+              <div>
+                                	 <a href="/home/create" class="btn btn-info form-control" role="button" ng-show="titleTab">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Create new task</a>
+                                </div>
+        	</div>
+             
+    </div>
+</div>
