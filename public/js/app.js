@@ -5,8 +5,8 @@ mainApp.config(function($routeProvider) {
         .when('/home', {
             templateUrl: 'testNgRoute/home.html'
         })
-        .when('/viewStudents', {
-            templateUrl: 'testNgRoute/viewStudents.html'
+        .when('/viewLists', {
+            templateUrl: 'testNgRoute/viewLists.php'
         })
         .otherwise({
             redirectTo: '/home'
@@ -27,47 +27,93 @@ mainApp.controller('StudentController', function($scope) {
 
 mainApp.controller('todoController', function($scope, $location , $http ) {
 
-	
+	//initialize formData
+	$scope.formData = {};
+	//initialize submit function
+	$scope.submitForm = function(id){
+		 var data = this.formData;
+		//TODO do ajax call and handle invalid or successful signups.
+		 console.log(data.password);
+		 console.log(id);
+
+		var dataObj = {
+				id: id,
+				password: data.password
+		};
+
+		console.log(dataObj);
+
+		var res = $http.post('/checkpassword', dataObj);
+		res.success(function(data, status, headers, config) {
+			if(data == "success"){
+				$scope.formData.password = "";
+				$scope.statusmsg = "Success";
+			}else{
+				$scope.statusmsg = "Password is incorrect! Please try again.";
+			}
+			
+		});
+		res.error(function(data, status, headers, config) {
+			$scope.statusmsg = "failed";
+		});
+
+		        
+		
+		
+
+	}
+
+
+
 
 	$scope.loading = false;
 	$scope.titleTab = true;
 
 	//loading before usertask
 	$scope.loading2 = false;
+	$scope.inputpassword = [];
 
-	
+
+	$scope.count = 0;
+	$scope.myFunction = function() {
+       			 $scope.count++;
+    	}
 
 	$scope.front = function(index){
 		$scope.titleTab = false;
 		$scope.loading2 = true;
 		
-
 		var list = $scope.usertasks[index];
 		$scope.tmpTasks = $scope.tasks[index];
-
 
 		$http.get('todoapp/'+ list.id).success(function(data, status, headers, config) {
 			$scope.listsuser = data;
 			$scope.userTaskTab = true;
 			$scope.loading2 = false;
-			$location.path( "/viewStudents" );
+			$scope.test = true;
+
+
 		});
 
 	}
 
-
-
-	$scope.back = function(){
-		$scope.titleTab = true;
-		
-	}
 
 	$scope.getUserDetail = function(id){
-		
+
+		 $scope.statusmsg = "";
+		 $scope.formData.password = "";
 		$http.get('api/usertasks/'+id).success(function(data, status, headers, config) {
 			$scope.tmpUsertask = data;
-
 		});
+		
+	}
+
+	$scope.checkpassword = function(id){
+		
+
+		
+
+	
 		
 	}
 

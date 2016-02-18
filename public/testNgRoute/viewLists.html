@@ -1,13 +1,13 @@
-<div class="container" ng-controller="todoController">
+<div class="container" >
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                {{  loading2 }}
-                {{ userTaskTab }}
+                 
                 <div class="panel-heading"><h2>Tasks List</h2></div>
                 <div class="panel-body">
                 	<center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
                 	<ul class="list-group" >
+
                                        	 <div>
 
                                                     <h4><strong>Title : </strong>{{ tmpTasks.title }}</h4>
@@ -16,10 +16,10 @@
                                                     <task>
                                                               <h4><strong>Body : </strong>{{ tmpTasks.body }}</h4>
                                                     </task>
-
+                                                        {{ statusmsg }}
                                                      <hr/>
 
-                                    			<table class="table table-striped task-table">	
+                                    			<table class="table table-striped task-table" ng-hide="loading2">	
                                     				<!-- Table Headings -->
                         					<thead>
                             					<th>Name</th>
@@ -30,8 +30,8 @@
 
 
 
-                                    				  	<td><% list.user.name  %></td>
-                                    				  	<td><% list.status  %></td>
+                                    				  	<td>{{ list.user.name  }}</td>
+                                    				  	<td>{{ list.status  }}</td>
                                     				  	<td> 
                                     				  		<div ng-if ="list.status == 'active'">
                                             						<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Actived</span> </h4>
@@ -60,9 +60,39 @@
 
             </div>
               <div>
-                                    <a  href="#/todoapp" class="btn btn-info form-control" role="button">Back</a>
+                                    <a  ng-href="#/todoapp" class="btn btn-info form-control" role="button">Back</a>
                                 </div>
         	</div>
              
     </div>
 </div>
+
+<div class="modal fade" id="myModal">
+              <div class="modal-dialog">
+                           <div class="modal-content">
+                                     <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                                             <h4 class="modal-title" id="myModalLabel">Confirm your password</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                                       <h4>ID : {{  tmpUsertask.id  }}  </h4>
+
+                                                        <h4>Welcome : {{  tmpUsertask.user.name }}</h4>
+
+                                                         <h4>Status : {{ tmpUsertask.status }}</h4>
+
+                                      <form ng-submit="checkpassword(tmpUsertask.id)">
+                                              
+                                                           Password: <input type="password" name="password"   ng-model="password"  required> 
+                                                            <input type="submit"  class= "btn btn-success" >
+                                                            {{ password }}
+
+                                      </form>
+
+
+                                      </div>
+                                       <div class="modal-footer">
+                                       </div>
+                          </div>
+              </div>
+  </div>

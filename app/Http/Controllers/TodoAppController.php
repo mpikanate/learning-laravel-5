@@ -43,32 +43,32 @@ class TodoAppController extends Controller {
 		return $todos;
 	}
 
-	 public function checkpassword($id, CheckPasswordRequest $request)
+	 public function checkpassword(Request $request )
     	{	
-	    	$usertasks = Usertasks::find($id);
-	      	$taskid = $usertasks->task_id;
-	        	$userid = $usertasks->user_id;
-	        	$task = Task::find($taskid);
-	        	$user = User::find($userid);
-	       	 //dd($request->all());
-	        	$password = $request->password;
-	        	$userpassword = $user->password;
+    		$id = $request->id;
+    		$password = $request->password;
+	    	$usertask = Usertasks::with('user','task')->get();
+		$usertask = $usertask->find($id);
+		$usertasks = Usertasks::find($id);
 
-	        	$hashedPassword = bcrypt('secrets');
-	        
-	       	 if (Hash::check($password, $userpassword))
-			{
-				
-	    		$usertasks['status'] = 'active';
-	        	           $usertasks->update();
-	        	//$tasdd = $usertasks->task_id;
-	       		// dd($dd);
-	        	return "success";
-			}
-	        else
-	        {
-	        	return "failed";
-	        }
+		$userpassword = $usertask->user->password;
+
+		if (Hash::check($password, $userpassword))
+		{
+			
+    			$usertasks['status'] = 'active';
+		        	 $usertasks->update();
+		        	//$tasdd = $usertasks->task_id;
+		       		// dd($dd);
+		        	return 'success';
+		}
+		        else
+		        {
+		        	
+		        	return 'failed';
+		        }
+
+
         
     	}
 

@@ -67,6 +67,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('todoapp','TodoAppController@index');
     Route::get('todoapp/{id}','TodoAppController@show');
 
+    //checkpassword
+    Route::post('checkpassword','TodoAppController@checkpassword');
+
 
    /* Route::get('/home', 'HomeController@index');
     //Route::get('/tasks', 'TasksController@index');
