@@ -1,14 +1,14 @@
-<div class="container" >
+<div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                  
                 <div class="panel-heading"><h2>Tasks List</h2></div>
                 <div class="panel-body">
-                	<center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
+                  <center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
                 	<ul class="list-group" >
 
-                                       	 <div>
+                                       	 <div ng-hide="loading2">
 
                                                     <h4><strong>Title : </strong>{{ tmpTasks.title }}</h4>
 								
@@ -19,7 +19,7 @@
                                                         
                                                      <hr/>
 
-                                    			<table class="table table-striped task-table" ng-hide="loading2">	
+                                    			<table class="table table-striped task-table" >	
                                     				<!-- Table Headings -->
                         					<thead>
                             					<th>Name</th>
@@ -38,10 +38,11 @@
                                          					</div>
                                                                         
                                          					<div ng-if ="list.status == 'passive'">
-                                            							<button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
+                                            							<!-- Original Modal
+                                                                                      <button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
                                               							<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed
-                                                                                      </button>        
-
+                                                                                      </button>  -->      
+                                                                                  <button class="btn btn-primary" ng-click="open(list.id)"><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> Signed</button>
                                            					 </div>
 
                                                                                          
@@ -65,7 +66,39 @@
         	</div>
              
     </div>
+
+  
+
 </div>
+             
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Please Confirm Your Password</h3>
+        </div>
+       
+         <form name="form-password" ng-submit="ok()">
+        <div class="modal-body">
+
+          Password :  <input ng-model = "user.password" type = "password" placeholder="Password"  required/><i ng-show="passwordloading" class="fa fa-spinner fa-spin" ></i>
+          
+
+         <div class="alert alert-danger" ng-if="statusmsg == 'Failed'">
+                                                         <strong>Password is incorrect! Please try again.</strong>
+        </div>
+      </div>
+        
+        <div class="modal-footer">
+            <input type="submit" id="submit-btn" value="OK" class="btn btn-primary"/> 
+            </form>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+         {{ selected }}
+    </script>
+
+
+
+
+
 
 <div class="modal fade" id="myModal" >
               <div class="modal-dialog">
@@ -82,13 +115,17 @@
 
                                       <form class="form sign-up" name="signUpForm" ng-submit="submitForm(tmpUsertask.id)">
                                               Password : <input type="password" name="password" id="password" ng-model="formData.password" required/>
-                                              <input type="submit" id="submit-btn" /> {{ statusmsg }}
+                                              <input type="submit" id="submit-btn" /> 
+                                              <br/>
+                                              <div class="alert alert-danger" ng-if="statusmsg == 'Failed'">
+                                                         <strong>Password is incorrect! Please try again.</strong>
+                                                   </div>
                                       </form>
                                                
                                                  
                                       </div>
                                        <div class="modal-footer">
-                                                  
+                                                   
                                        </div>
                           </div>
               </div>

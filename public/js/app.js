@@ -1,5 +1,5 @@
-var mainApp = angular.module("mainApp", ['ngRoute']);
- 
+var mainApp = angular.module("mainApp", ['ngRoute','ngAnimate', 'ui.bootstrap' ]);
+
 mainApp.config(function($routeProvider) {
     $routeProvider
         .when('/home', {
@@ -12,6 +12,7 @@ mainApp.config(function($routeProvider) {
             redirectTo: '/home'
         });
 });
+
  
 mainApp.controller('StudentController', function($scope) {
     $scope.students = [
@@ -23,9 +24,7 @@ mainApp.controller('StudentController', function($scope) {
     $scope.message = "Click on the hyper link to view the students list.";
 });
 
-
-
-mainApp.controller('todoController', function($scope, $location , $http ) {
+mainApp.controller('todoController', function($scope, $location , $http ,$uibModal, $log) {
 
 	//initialize formData
 	$scope.formData = {};
@@ -48,13 +47,14 @@ mainApp.controller('todoController', function($scope, $location , $http ) {
 			if(data == "success"){
 				$scope.formData.password = "";
 				$scope.statusmsg = "Success";
-			}else{
-				$scope.statusmsg = "Password is incorrect! Please try again.";
+			}else if(data == "failed"){
+				$scope.formData.password = "";
+				$scope.statusmsg = "Failed";
 			}
 			
 		});
 		res.error(function(data, status, headers, config) {
-			$scope.statusmsg = "failed";
+			//error connection
 		});
 
 		        
@@ -81,15 +81,18 @@ mainApp.controller('todoController', function($scope, $location , $http ) {
 
 	$scope.front = function(index){
 		$scope.titleTab = false;
-		$scope.loading2 = true;
+		
 		
 		var list = $scope.usertasks[index];
 		$scope.tmpTasks = $scope.tasks[index];
 
+
+		$scope.loading2 = true;
 		$http.get('todoapp/'+ list.id).success(function(data, status, headers, config) {
+			$scope.loading2 = false;
 			$scope.listsuser = data;
 			$scope.userTaskTab = true;
-			$scope.loading2 = false;
+			
 			$scope.test = true;
 
 
@@ -107,20 +110,6 @@ mainApp.controller('todoController', function($scope, $location , $http ) {
 		});
 		
 	}
-
-	$scope.checkpassword = function(id){
-		
-
-		
-
-	
-		
-	}
-
-	
-
-	
-
 
 
 	$scope.getUsertasks = function(index) {
@@ -148,8 +137,88 @@ mainApp.controller('todoController', function($scope, $location , $http ) {
 	}
 
 
-	
+	$scope.user = {name: ""}
+
+	  $scope.open = function (id) {
+	  	$scope.uid = id;
+	    var modalInstance = $uibModal.open({
+	      templateUrl: 'myModalContent.html',
+	      controller: 'ModalInstanceCtrl',
+	      size: '',
+	      resolve: {
+	        items: function () {
+	          return $scope.uid;
+	        }
+	      }
+	    });    
+	    modalInstance.result.then(function (selectedItem) {
+	      	$scope.selected = selectedItem;
+	    }, function () {
+	      	$log.info('Modal dismissed at: ' + new Date());
+	    });
+	  };
+	      //$scope.uid = id;
+	    
+	  //Modal Instance
+
+	  //end modal instance
+
+
 
 	$scope.init();
+
+
+
+});
+
+
+
+// Please note that $uibModalInstance represents a modal window (instance) dependency.
+// It is not the same as the $uibModal service used above.
+
+angular.module('mainApp').controller('ModalInstanceCtrl', function($scope, $http ,$uibModalInstance, items) {
+
+
+		$scope.passwordloading = false;
+		  $scope.ok = function () {
+		  	$scope.passwordloading = true;
+		  	$scope.uid = items;
+			var dataObj = {
+					id: $scope.uid ,
+					password: $scope.user.password
+			};
+
+			console.log(dataObj);
+			if($scope.user.password == ""){
+				$scope.passwordloading = false;
+			}else{
+				var res = $http.post('/checkpassword', dataObj);
+			res.success(function(data, status, headers, config) {
+				if(data == "success"){
+					$scope.user.password = "";
+					$scope.statusmsg = "Success";
+					$scope.passwordloading = false;
+					$uibModalInstance.close($scope.user,$scope.uid);
+					redirectTo('todoapp');
+					
+				}else if(data == "failed"){
+					$scope.user.password = "";
+					$scope.statusmsg = "Failed";
+					$scope.passwordloading = false;
+				}
+				
+			});
+			res.error(function(data, status, headers, config) {
+				//error connection
+			});
+			}
+			
+
+		  };
+
+		  $scope.cancel = function () {
+		    $uibModalInstance.dismiss('cancel');
+		  };
+
 
 });

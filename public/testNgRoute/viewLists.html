@@ -5,54 +5,54 @@
                  
                 <div class="panel-heading"><h2>Tasks List</h2></div>
                 <div class="panel-body">
-                	<center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
-                	<ul class="list-group" >
+                  <center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
+                  <ul class="list-group" >
 
-                                       	 <div>
+                                         <div>
 
                                                     <h4><strong>Title : </strong>{{ tmpTasks.title }}</h4>
-								
+                
 
                                                     <task>
                                                               <h4><strong>Body : </strong>{{ tmpTasks.body }}</h4>
                                                     </task>
-                                                        {{ statusmsg }}
+                                                        
                                                      <hr/>
 
-                                    			<table class="table table-striped task-table" ng-hide="loading2">	
-                                    				<!-- Table Headings -->
-                        					<thead>
-                            					<th>Name</th>
-                         						 <th>Status</th>
-                          					<th></th>
-                          				</thead>
-                                    				  <tbody ng-repeat ="list in listsuser">
+                                          <table class="table table-striped task-table" ng-hide="loading2"> 
+                                            <!-- Table Headings -->
+                                  <thead>
+                                      <th>Name</th>
+                                     <th>Status</th>
+                                    <th></th>
+                                  </thead>
+                                              <tbody ng-repeat ="list in listsuser">
 
 
 
-                                    				  	<td>{{ list.user.name  }}</td>
-                                    				  	<td>{{ list.status  }}</td>
-                                    				  	<td> 
-                                    				  		<div ng-if ="list.status == 'active'">
-                                            						<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Actived</span> </h4>
-                                         					</div>
+                                                <td>{{ list.user.name  }}</td>
+                                                <td>{{ list.status  }}</td>
+                                                <td> 
+                                                  <div ng-if ="list.status == 'active'">
+                                                        <h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Actived</span> </h4>
+                                                  </div>
                                                                         
-                                         					<div ng-if ="list.status == 'passive'">
-                                            							<button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
-                                              							<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed
+                                                  <div ng-if ="list.status == 'passive'">
+                                                          <button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
+                                                            <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed
                                                                                       </button>        
 
-                                           					 </div>
+                                                     </div>
 
                                                                                          
 
-                                    				  	</td>
+                                                </td>
 
-                    					</tbody>
-                                    			</table>
-                                       	 </div>
-                                 	
-                                	</ul>
+                              </tbody>
+                                          </table>
+                                         </div>
+                                  
+                                  </ul>
 
                 
                 
@@ -62,16 +62,44 @@
               <div>
                                     <a  ng-href="#/todoapp" class="btn btn-info form-control" role="button">Back</a>
                                 </div>
-        	</div>
+          </div>
              
     </div>
 </div>
 
-<div class="modal fade" id="myModal">
+<div ng-controller="ModalDemoCtrl">
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title"> Im a modal </h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+    <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
+    <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
+    <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+</div>
+
+
+
+
+<div class="modal fade" id="myModal" >
               <div class="modal-dialog">
                            <div class="modal-content">
-                                     <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                     <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>
                                                              <h4 class="modal-title" id="myModalLabel">Confirm your password</h4>
                                         </div>
                                         <div class="modal-body">
@@ -81,17 +109,19 @@
 
                                                          <h4>Status : {{ tmpUsertask.status }}</h4>
 
-                                      <form ng-submit="checkpassword(tmpUsertask.id)">
-                                              
-                                                           Password: <input type="password" name="password"   ng-model="password"  required> 
-                                                            <input type="submit"  class= "btn btn-success" >
-                                                            {{ password }}
-
+                                      <form class="form sign-up" name="signUpForm" ng-submit="submitForm(tmpUsertask.id)">
+                                              Password : <input type="password" name="password" id="password" ng-model="formData.password" required/>
+                                              <input type="submit" id="submit-btn" /> 
+                                              <br/>
+                                              <div class="alert alert-danger" ng-if="statusmsg == 'Failed'">
+                                                         <strong>Password is incorrect! Please try again.</strong>
+                                                   </div>
                                       </form>
-
-
+                                               
+                                                 
                                       </div>
                                        <div class="modal-footer">
+                                                   
                                        </div>
                           </div>
               </div>

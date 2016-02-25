@@ -43,7 +43,10 @@ Route::group(['middleware' => 'web'], function () {
     });
     Route::resource('/home','HomeController');
     
-  
+    //test module
+    Route::get('/testModule',function(){
+        return view('testModule');
+    });
 
     Route::any('home/active/{status}', 'UserTasksController@getActive');
     Route::any('home/passive/{status}', 'UserTasksController@getPassive');
