@@ -1,17 +1,18 @@
-<div class="container" >
+<div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                  
-                <div class="panel-heading"><h2>Tasks List</h2></div>
+                <div class="panel-heading"><h2>Users Task List</h2></div>
                 <div class="panel-body">
-                  <center><i ng-show="loading2" class="fa fa-spinner fa-spin" ></i></center>
-                  <ul class="list-group" >
+                            <ul class="fa-ul" ng-show="loadingSpin">
+                              <center><h3><li><i class="fa fa-spinner fa-pulse"></i>  Please Wait</li></h3></center>
+                            </ul>
+                	<ul class="list-group" ng-show="loadingUsertask">
 
-                                         <div>
+                                       	 <div >
 
                                                     <h4><strong>Title : </strong>{{ tmpTasks.title }}</h4>
-                
 
                                                     <task>
                                                               <h4><strong>Body : </strong>{{ tmpTasks.body }}</h4>
@@ -19,79 +20,80 @@
                                                         
                                                      <hr/>
 
-                                          <table class="table table-striped task-table" ng-hide="loading2"> 
-                                            <!-- Table Headings -->
-                                  <thead>
-                                      <th>Name</th>
-                                     <th>Status</th>
-                                    <th></th>
-                                  </thead>
-                                              <tbody ng-repeat ="list in listsuser">
+                                    			<table class="table table-striped task-table" >	
+                                    				<!-- Table Headings -->
+                        					<thead>
+                            					<th>Name</th>
+                         						 <th>Status</th>
+                          					<th></th>
+                          				</thead>
+                                    				  <tbody ng-repeat ="list in listsuser">
 
 
 
-                                                <td>{{ list.user.name  }}</td>
-                                                <td>{{ list.status  }}</td>
-                                                <td> 
-                                                  <div ng-if ="list.status == 'active'">
-                                                        <h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Actived</span> </h4>
-                                                  </div>
+                                    				  	<td>{{ list.user.name  }}</td>
+                                    				  	<td>{{ list.status  }}</td>
+                                    				  	<td> 
+                                    				  		<div ng-if ="list.status == 'active'">
+                                            						<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Actived</span> </h4>
+                                         					</div>
                                                                         
-                                                  <div ng-if ="list.status == 'passive'">
-                                                          <button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
-                                                            <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed
-                                                                                      </button>        
-
-                                                     </div>
+                                         					<div ng-if ="list.status == 'passive'">
+                                            							<!-- Original Modal
+                                                                                      <button  class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserDetail(list.id)">
+                                              							<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed
+                                                                                      </button>  -->      
+                                                                                  <button class="btn btn-primary" ng-click="open(list.id)"><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> Sign</button>
+                                           					 </div>
 
                                                                                          
 
-                                                </td>
+                                    				  	</td>
 
-                              </tbody>
-                                          </table>
-                                         </div>
-                                  
-                                  </ul>
-
-                
+                    					</tbody>
+                                    			</table>
+                                       	 </div>
+                                 	
+                                	</ul>
+                              <div>
+                                    <a  ng-href="#/todoapp" class="btn btn-info form-control" role="button">Back</a>
+                                </div>
                 
                 </div>
 
-            </div>
-              <div>
-                                    <a  ng-href="#/todoapp" class="btn btn-info form-control" role="button">Back</a>
-                                </div>
-          </div>
              
     </div>
-</div>
 
-<div ng-controller="ModalDemoCtrl">
+  
+
+</div>
+             
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title"> Im a modal </h3>
+            <h3 class="modal-title">Please Confirm Your Password</h3>
         </div>
+       
+         <form name="form-password" ng-submit="ok()">
         <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">
-                    <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ selected.item }}</b>
+
+          Password :  <input ng-model = "user.password" type = "password" placeholder="Password"  required/><i ng-show="passwordloading" class="fa fa-spinner fa-spin" ></i>
+          
+
+         <div class="alert alert-danger" ng-if="statusmsg == 'Failed'">
+                                                         <strong>Password is incorrect! Please try again.</strong>
         </div>
+      </div>
+        
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <input type="submit" id="submit-btn" value="Accept" class="btn btn-primary"/> 
+            </form>
+
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
         </div>
+         {{ selected }}
     </script>
 
-    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-    <button type="button" class="btn btn-default" ng-click="open('lg')">Large modal</button>
-    <button type="button" class="btn btn-default" ng-click="open('sm')">Small modal</button>
-    <button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
-    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
-</div>
+
 
 
 

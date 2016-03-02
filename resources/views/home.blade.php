@@ -5,7 +5,7 @@
 
 
 
-<div class="container">
+<div class="container" ng-app="mainApp" ng-controller="todoController">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">

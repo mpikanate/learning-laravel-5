@@ -91,9 +91,9 @@ class HomeController extends Controller
        // dd($request->toArray());
         //$input['uid'] = $request->uid;
         //dd($request->title);
-
+        //dd($request->all());
         Task::create($request->all());
-        
+        dd($request->all());
         $taskid = Task::latest('id')->get();
         $test = $taskid->first();
         $id = $test->id;

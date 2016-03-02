@@ -11,6 +11,9 @@ use App\User;
 use App\Task;
 use App\Http\Requests\CheckPasswordRequest;
 use Hash;
+use Log;
+use Carbon\Carbon;
+
 
 
 class TodoAppController extends Controller {
@@ -71,6 +74,61 @@ class TodoAppController extends Controller {
 
         
     	}
+    	public function createtask(Request $request)
+	{ 
+
+
+		$date = $request->published_at;
+		if($date == ""){
+			$request['published_at'] = Carbon::now();
+		}else{
+			Log::info($date);
+
+
+			$fixeddated = date('Y-m-d', strtotime($date));
+
+
+
+			Log::info($fixeddated);
+
+
+			$request['published_at'] = Carbon::createFromFormat('Y-m-d', $fixeddated);
+		}
+
+		
+
+		$data = $request->all();
+		Log::info($data);
+		
+		//dd($request->all());
+		Task::create($data);
+
+
+		
+		$task = Task::latest('id')->get();
+	        	$taskid = $task->first();
+	        	$id = $taskid->id;
+
+	       // dd($taskid->toArray());
+	        $users = User::where('status_user','user')->get();
+	        //dd($users);
+	        //dd($users);
+	        foreach ($users as $user) {
+	            $request['status'] = 'passive';
+	            $request['user_id'] = $user->id;
+	            $request['task_id'] = $id;//add task id
+	            Usertasks::create($request->all());
+	            //dd($request->toArray());
+	        }
+
+
+
+
+		$status = $data;
+		return $status;
+		
+		
+	}
 
 
 }

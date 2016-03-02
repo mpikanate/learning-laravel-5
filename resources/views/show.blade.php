@@ -56,7 +56,7 @@
                                           <form action="{{ url('home/check/'.$usertask->id) }}" method="POST">
                                             {!! csrf_field() !!}
                                             <button  class="btn btn-primary">
-                                              <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Signed</button>
+                                              <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>  Sign</button>
 
                                             </form>
                                         @endif

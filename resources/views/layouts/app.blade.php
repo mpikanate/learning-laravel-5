@@ -18,6 +18,7 @@
         <!--AngularJS-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/createCtrl.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28//angular-route.min.js"></script>
      <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.1.2.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.js"></script>
@@ -56,7 +57,7 @@
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <ul class="nav navbar-nav navbar-left">
-                        <li><a href="{{ url('/home') }}">Home</a></li>
+                        <li><a href="{{ url('/todoapp') }}">Home</a></li>
                     
                 </ul>
                 

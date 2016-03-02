@@ -3,103 +3,93 @@ var mainApp = angular.module("mainApp", ['ngRoute','ngAnimate', 'ui.bootstrap' ]
 mainApp.config(function($routeProvider) {
     $routeProvider
         .when('/home', {
-            templateUrl: 'testNgRoute/home.html'
+            templateUrl: 'testNgRoute/home.html',   
+            controller:'todoController'           
         })
-        .when('/viewLists', {
-            templateUrl: 'testNgRoute/viewLists.php'
+         .when('/create', {
+            templateUrl: 'testNgRoute/create.html',    
+            controller:'CreateNewItemController'     
+        })
+
+        .when('/viewLists/:param1', {
+            templateUrl: 'testNgRoute/viewLists.html',
+            controller:'todoController'
         })
         .otherwise({
             redirectTo: '/home'
         });
 });
 
- 
-mainApp.controller('StudentController', function($scope) {
-    $scope.students = [
-        {name: 'Mark Waugh', city:'New York'},
-        {name: 'Steve Jonathan', city:'London'},
-        {name: 'John Marcus', city:'Paris'}
-    ];
- 
-    $scope.message = "Click on the hyper link to view the students list.";
-});
-
-mainApp.controller('todoController', function($scope, $location , $http ,$uibModal, $log) {
-
-	//initialize formData
-	$scope.formData = {};
-	//initialize submit function
-	$scope.submitForm = function(id){
-		 var data = this.formData;
-		//TODO do ajax call and handle invalid or successful signups.
-		 console.log(data.password);
-		 console.log(id);
-
-		var dataObj = {
-				id: id,
-				password: data.password
-		};
-
-		console.log(dataObj);
-
-		var res = $http.post('/checkpassword', dataObj);
-		res.success(function(data, status, headers, config) {
-			if(data == "success"){
-				$scope.formData.password = "";
-				$scope.statusmsg = "Success";
-			}else if(data == "failed"){
-				$scope.formData.password = "";
-				$scope.statusmsg = "Failed";
-			}
-			
-		});
-		res.error(function(data, status, headers, config) {
-			//error connection
-		});
-
-		        
-		
-		
-
-	}
 
 
+mainApp.controller('todoController', function($scope, $location , $http ,$uibModal, $log,$rootScope,$routeParams) {
+	
+	//test communicate between controller
+	        $rootScope.$on("CallParentMethod", function(){
+	           $scope.updateSigned($scope.curId);
 
+	      });
+	    $scope.test2 = function(){
+	        	alert("test");
+	      }
 
 	$scope.loading = false;
 	$scope.titleTab = true;
 
 	//loading before usertask
-	$scope.loading2 = false;
+	$scope.loadingSpin = false;
+	$scope.loadingUsertask = false;
 	$scope.inputpassword = [];
 
 
-	$scope.count = 0;
-	$scope.myFunction = function() {
-       			 $scope.count++;
-    	}
 
-	$scope.front = function(index){
+    	var param1 = $routeParams.param1;
+
+	$scope.front = function(param1){
 		$scope.titleTab = false;
+		$scope.curId = param1;
+		$scope.getUsertaskByID($scope.curId);
 		
-		
-		var list = $scope.usertasks[index];
-		$scope.tmpTasks = $scope.tasks[index];
-
-
-		$scope.loading2 = true;
-		$http.get('todoapp/'+ list.id).success(function(data, status, headers, config) {
-			$scope.loading2 = false;
-			$scope.listsuser = data;
-			$scope.userTaskTab = true;
-			
-			$scope.test = true;
-
-
-		});
 
 	}
 
+	$scope.getUsertaskByID = function(id){
+		
+		
+		$http.get('api/tasks/'+ id).success(function(data, status, headers, config) {
+
+			$scope.tmpTasks = data;
+
+
+		});
+		$scope.loadingSpin = true;
+		$scope.loadingUsertask = false;
+		$http.get('todoapp/'+ id).success(function(data, status, headers, config) {
+
+			$scope.listsuser = data;
+			$scope.loadingSpin = false;
+			$scope.loadingUsertask = true;
+
+
+		});
+	}
+
+	$scope.updateSigned = function(id){
+		$http.get('api/tasks/'+ id).success(function(data, status, headers, config) {
+
+			$scope.tmpTasks = data;
+
+
+		});
+		$http.get('todoapp/'+ id).success(function(data, status, headers, config) {
+			
+			$scope.listsuser = data;
+			$scope.loadingSpin = false;
+			$scope.loadingUsertask = true;
+
+
+		});
+	}
 
 	$scope.getUserDetail = function(id){
 
@@ -112,14 +102,7 @@ mainApp.controller('todoController', function($scope, $location , $http ,$uibMod
 	}
 
 
-	$scope.getUsertasks = function(index) {
-		$scope.loading = true;
-		$http.get('todoapp/'+index).success(function(data, status, headers, config) {
-			$scope.usertasks = data;
-			$scope.loading = false;
 
-		});
-	}
 
 	$scope.init = function() {
 		$scope.loading = true;
@@ -151,22 +134,22 @@ mainApp.controller('todoController', function($scope, $location , $http ,$uibMod
 	        }
 	      }
 	    });    
-	    modalInstance.result.then(function (selectedItem) {
-	      	$scope.selected = selectedItem;
+	    modalInstance.result.then(function () {
+	      	$http.get('todoapp/'+ $scope.curId).success(function(data, status, headers, config) {
+			
+			$scope.listsuser = data;
+			$scope.loadingSpin = false;
+			$scope.loadingUsertask = true;
+
+
+		});
 	    }, function () {
 	      	$log.info('Modal dismissed at: ' + new Date());
 	    });
 	  };
-	      //$scope.uid = id;
-	    
-	  //Modal Instance
-
-	  //end modal instance
-
-
 
 	$scope.init();
-
+	$scope.front(param1);
 
 
 });
@@ -176,11 +159,18 @@ mainApp.controller('todoController', function($scope, $location , $http ,$uibMod
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('mainApp').controller('ModalInstanceCtrl', function($scope, $http ,$uibModalInstance, items) {
+angular.module('mainApp').controller('ModalInstanceCtrl', function($scope, $http ,$uibModalInstance,$rootScope, items) {
 
-
+		//test communicate between controller
+		
+		 $scope.childmethod = function() {
+		            $rootScope.$emit("CallParentMethod", {});
+		}
+		  
+		    //
 		$scope.passwordloading = false;
 		  $scope.ok = function () {
+		  	
 		  	$scope.passwordloading = true;
 		  	$scope.uid = items;
 			var dataObj = {
@@ -198,8 +188,9 @@ angular.module('mainApp').controller('ModalInstanceCtrl', function($scope, $http
 					$scope.user.password = "";
 					$scope.statusmsg = "Success";
 					$scope.passwordloading = false;
-					$uibModalInstance.close($scope.user,$scope.uid);
-					redirectTo('todoapp');
+					//$scope.childmethod();
+					$uibModalInstance.close();
+				
 					
 				}else if(data == "failed"){
 					$scope.user.password = "";

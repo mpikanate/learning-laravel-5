@@ -23,10 +23,7 @@ class Task extends Model
     public function scopeUnpublished($query){
     	$query->where('published_at', '>' , Carbon::now());
     }
-  
-    public function setPublishedAtAttribute($date){
-    	$this->attributes['published_at'] = Carbon::createFromFormat('Y-m-d',$date);
-    }
+
 
 
     

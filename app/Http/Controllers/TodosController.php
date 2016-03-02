@@ -20,16 +20,28 @@ class TodosController extends Controller {
 		$usertask = Usertasks::all();
 		return $usertask;
 	}
-	public function getUser($id) {
+	public function getUser() {
+
+		$user = User::all()->where('status_user','user');
+		return $user;
+	}
+	public function getUserById($id) {
 
 		$user = User::find($id);
 		return $user;
 	}
 	public function getTask() {
 
-		$task = Task::all();
+		$task = Task::latest('published_at')->get();;
 		return $task;
 	}
+
+	public function getTaskbyID($id) {
+
+		$task = Task::find($id);
+		return $task;
+	}
+
 	public function getUsertask() {
 
 		$usertask = Usertasks::all();

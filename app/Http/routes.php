@@ -59,9 +59,10 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::resource('api/todos','TodosController');
-
-    Route::get('api/users/{id}','TodosController@getUser');
+    Route::get('api/users','TodosController@getUser');
+    Route::get('api/users/{id}','TodosController@getUserById');
     Route::get('api/tasks','TodosController@getTask');
+    Route::get('api/tasks/{id}','TodosController@getTaskbyID');
     Route::get('api/usertasks','TodosController@getUsertask');
 
     Route::get('api/usertasks/{id}','TodosController@selectUsertask');
@@ -72,6 +73,15 @@ Route::group(['middleware' => 'web'], function () {
 
     //checkpassword
     Route::post('checkpassword','TodoAppController@checkpassword');
+
+    //create Task
+    Route::post('createtask','TodoAppController@createtask');
+
+    Route::get('create' , function()
+    {
+        return view('createItem');
+
+    });
 
 
    /* Route::get('/home', 'HomeController@index');
